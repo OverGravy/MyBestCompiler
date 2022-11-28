@@ -10,4 +10,6 @@ Utilizzeremo Flex come generatore di un parser e uno scanner otimmale mentre uti
 
 # Problematiche 
 
-- yylineno non funziona correttamente, otteng un'errore in fase di compilazione.
+- yylineno non funziona correttamente, ottengo un'errore in fase di compilazione.
+
+- capire a cosa serve vtoken
