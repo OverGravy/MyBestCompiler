@@ -1,3 +1,7 @@
 int a = 1;
 
-float b;
+int b = 2;
+
+int c;
+
+c=a+b;

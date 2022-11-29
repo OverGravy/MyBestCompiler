@@ -28,19 +28,19 @@ int main(void){
         case TYPEINT:
             if (ntoken!= VAR){ // se mi accorgo che non c'è VAR
               //printf("Syntax Error in line %d Expected varariable name but found: %s",yylineno,yytext);
-              printf("Syntax Error, Expexted variable name found: %s",yytext);         
+              // printf("Syntax Error, Expexted variable name found: %s",yytext);         
             }
             break;
         case TYPEFLOAT:
             if (ntoken!= VAR){ // se mi accorgo che non c'è VAR
               //printf("Syntax Error in line %d Expected varariable name but found: %s",yylineno,yytext);
-              printf("Syntax Error, Expexted variable name found: %s",yytext);
+              // printf("Syntax Error, Expexted variable name found: %s",yytext);
               }
             break;
          case VAR:
             if (ntoken!= ENDLINE || ntoken!= ASSIGNAMENT){ // se mi accorgo che non c'è = 0 un assegnamento
               //printf("Syntax Error in line %d Expected Assignamnet or ';' but found: %s",yylineno,yytext);
-              printf("Syntax Error, Expexted ';' or '=' found: %s",yytext);
+              //printf("Syntax Error, Expexted ';' or '=' found: %s",yytext);
               }
             break;
         }
