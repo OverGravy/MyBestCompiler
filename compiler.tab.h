@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_COMPILER_TAB_H_INCLUDED
+# define YY_YY_COMPILER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -54,35 +54,24 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    print = 258,                   /* print  */
-    integer = 259,                 /* integer  */
-    variable = 260,                /* variable  */
-    eq = 261,                      /* eq  */
-    value = 262,                   /* value  */
-    endline = 263                  /* endline  */
+    integer = 258,                 /* integer  */
+    variable = 259,                /* variable  */
+    equal = 260,                   /* equal  */
+    VarValue = 261,                /* VarValue  */
+    endline = 262,                 /* endline  */
+    plus = 263                     /* plus  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Token kinds.  */
-#define YYEMPTY -2
-#define YYEOF 0
-#define YYerror 256
-#define YYUNDEF 257
-#define print 258
-#define integer 259
-#define variable 260
-#define eq 261
-#define value 262
-#define endline 263
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
 #line 28 "compiler.y"
-char integer; char VarName; char equal; int value; char endline 
+char type; char VarName; char assignamnet; int value; char dilimiter; char Aoperation; char instruct;
 
-#line 86 "y.tab.h"
+#line 75 "compiler.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -97,4 +86,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_COMPILER_TAB_H_INCLUDED  */

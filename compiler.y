@@ -25,47 +25,45 @@ void updateSymbolVal(char symbol, int val); //aggiorna la symbol table
 
 %}
 
-%union{char integer; char VarName; char equal; int value; char endline } 
+%union{char type; char VarName; char assignamnet; int value; char dilimiter; char Aoperation; char instruct;} 
 
-%start first 
+%start program
 
-%token print
-%token <integer> integer 
+%token <type> integer 
 %token <VarName> variable
-%token <equal> eq
-%token <value> value
-%token <endline> endline
+%token <assignamnet> equal
+%token <value> VarValue
+%token <delimiter> endline
+%token <Aoperation> plus
 
-%type <Num> value 
-%type <str> assignamnet definition integer equal endline VarName
-
-
-
+%type <value> exp term
+%type <VarName> program DefAss SingleAss
 
 %%
 
 /*descrizione di input attesi corrispondenti azioni da svolgere  in C*/
 
-first : definition {;}
-      | assignamnet {;}
-      | print exp {printf("Printig %d\n",$2);}
-      ;
+program : integer {;} 
+        | DefAss {;}
+        | SingleAss {;}
+        ;
 
 
-definition : integer variable eq value endline {printf("Ho trovato una definizione");updateSymbolVal($2,$4);} //trovo una definzione aggiungo alla table il nome con il valore
-           ;
+DefAss : integer variable equal VarValue endline {printf("Ho trovato una definizione");updateSymbolVal($2,$4);} //trovo una definzione aggiungo alla table il nome con il valore
+       ;
 
-assignamnet : variable eq exp {printf("Ho trovato un'espessione: %d",$3);updateSymbolVal($1,$3);} //inserisco il valore nel 
-            ;
+SingleAss : variable equal exp endline{printf("Ho trovato un'espessione: %d",$3);updateSymbolVal($1,$3);} //inserisco il valore nel 
+          ;
 
 exp : term {$$=$1;}
-    | exp '+' term {$$=$1+$3;}
+    | exp plus term endline {$$=$1+$3;}
     ;
 
-term : value {$$ =$1;}
+term : VarValue {$$ =$1;}
      | variable {$$ =symbolVal($1);}
      ;
 %%
+
 
 //Questa funzione mappa la Symbol table
 int computeSymbolIndex(char token){
@@ -88,12 +86,13 @@ void updateSymbolVal(char symbol,int val){
     IntSymbol[bucket]=val;
 }
 
-int main(void){
+int main(){
     int i;
+    int ntoken;
     for (i=0;i<52;i++){
         IntSymbol[i]=0; // metto tutto a 0 nella symbol table.
     }
-    return yyparse();
+        return yyparse();
 }
 
 void yyerror(char *s){fprintf(stderr,"%s\n",s);}

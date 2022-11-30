@@ -1,29 +1,28 @@
 %option noyywrap
 
 %{
-  #include "y.tab.h" 
+  #include "compiler.tab.h" 
 %}
 
 %%
 
-"int"                 {return integer}
-
-"print"               {return print}
-
-[a-zA-Z][_a-zA-Z0-9]* {yyval.variable = yytext[0]; return variable;}
+[int]                 {return integer;}
 
 
-"="                   {return eq;}
+[a-zA-Z][_a-zA-Z0-9]* {yylval.VarName = yytext[0]; return VarValue;}
 
 
-[0-9][1-9]*           {yyval.value= atoi(yytext); return value;}
+[=]                   {return equal;}
+
+
+[0-9]+           {yylval.value= atoi(yytext); return VarValue;}
   
 
-[ \t\n]               {;}
+[\t\n\r]               {;}
 
-";"                   return {endline};
+[;]                  {return endline;}
 
-[+]                   return
+[+]                   {return plus;}
 
 %%
 
