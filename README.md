@@ -12,18 +12,16 @@ Usermo poi Bison/ come parser e Lexical Analyzer per interpretre ciò che avvien
 
 # Stato attuale
 
-- Compilazione senza errori.
-- Posso individuare int con relativa definzione e definizone + assegnazione. 
-- Posso fare le somme e le sottrazioni
-
+-Alcuni errori in compilazione dovuti al file compiler.y
+-Sto cercando di implementare il float
 
 # Problematiche 
 
-- Alcuna solo featur da aggiungere
+- Non riesco ancora a compilare 
 
 # Feature da aggiungere
 
-- Supporto syntax tree
+- Supporto float
 
 # Note 
 
