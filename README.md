@@ -12,20 +12,21 @@ Usermo poi Bison/ come parser e Lexical Analyzer per interpretre ciò che avvien
 
 # Stato attuale
 
-- Genero bene i file compiler.tab.y e la controparte .c
-- La compilazione riesce solo con warning e note 
-- Qualsiasi cosa inserisca ottengo solo sytax error
+- Compilazione senza errori.
+- Posso individuare int con relativa definzione e definizone + assegnazione. 
+- Posso fare le somme e le sottrazioni
 
 
 # Problematiche 
 
-- Devo capire meglio come funziona il concetto di %token e %type con il tipo union.
-- Ho capito meglio alcune cose ma l'errore rime in quella parte ed è un'errore logico non capisco bene quale però.
+- Alcuna solo featur da aggiungere
+
+# Feature da aggiungere
+
+- Supporto syntax tree
 
 # Note 
 
-Il file Scanner.c è inutile per ora, non lo elimino per il meme.
-
-yacc non va usato gener errori in fase di compilazione con gcc attribuibili a y.tab.h
+Ricordati di utilizzare yacc
 
 Ricordati quando utilizzi Bison/yacc di usare bison -d per generare un nuovo file y.tab.c 

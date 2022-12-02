@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_COMPILER_TAB_H_INCLUDED
-# define YY_YY_COMPILER_TAB_H_INCLUDED
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -54,24 +54,40 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    integer = 258,                 /* integer  */
-    variable = 259,                /* variable  */
-    equal = 260,                   /* equal  */
-    VarValue = 261,                /* VarValue  */
-    endline = 262,                 /* endline  */
-    plus = 263                     /* plus  */
+    print = 258,                   /* print  */
+    exit_command = 259,            /* exit_command  */
+    integer = 260,                 /* integer  */
+    floatin = 261,                 /* floatin  */
+    identifier = 262,              /* identifier  */
+    IntNumber = 263,               /* IntNumber  */
+    FloatNumber = 264              /* FloatNumber  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
+/* Token kinds.  */
+#define YYEMPTY -2
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
+#define print 258
+#define exit_command 259
+#define integer 260
+#define floatin 261
+#define identifier 262
+#define IntNumber 263
+#define FloatNumber 264
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 28 "compiler.y"
-char type; char VarName; char assignamnet; int value; char dilimiter; char Aoperation; char instruct;
+#line 12 "compiler.y"
 
-#line 75 "compiler.tab.h"
+	int num; 
+	float Fnum;
+	char id;
+
+#line 91 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -86,4 +102,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_COMPILER_TAB_H_INCLUDED  */
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
