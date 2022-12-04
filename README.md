@@ -12,16 +12,15 @@ Usermo poi Bison/ come parser e Lexical Analyzer per interpretre ciò che avvien
 
 # Stato attuale
 
--Alcuni errori in compilazione dovuti al file compiler.y
--Sto cercando di implementare il float
+
 
 # Problematiche 
 
-- Non riesco ancora a compilare 
+-
 
 # Feature da aggiungere
 
-- Supporto float
+- poter inserire variabili costituite da + lettere o numeri
 
 # Note 
 

@@ -5,36 +5,30 @@ int yylex();
 #include <stdio.h>     /* C declarations used in actions */
 #include <stdlib.h>
 #include <ctype.h>
+#include "SymbolTable.h"
 
-/*ragionare su cosa sia meglio per salvare le variabili*/
-typedef struct{
-	int intSym[52];
-	float fsym[52];
-	char tip[52];
-}symbols;
-
-float FsymbolVal(char symbol);
-int IsymbolVal(char symbol);
-void updateSymbolVal(char symbol, int Ival,float Fval);
+/*la mia symbol table è una struttura descritta dentro SymbolTable.h*/
+sym symbols;
 %}
 
+/*Union contiene i tipi dei tag che andremo a lavorare e eche nonvanno solo riconosciuti (il tipo è la cosa tra <>)*/
 %union {
 	int num; 
 	float Fnum;
-	char id;
+	char id; 
 }         /* Yacc definitions */
 
-%start principal
+%start principal 
 
-/* */
+/* questi token vanno solo riconosciuti possono non avere tipo */
 %token print
 %token exit_command
 
-/*token di tipo*/
+/*token di tipo potrebbero pure essere senza tipo*/
 %token <type> integer
 %token <type> floatin 
 
-
+/*token per il nome delle variabili*/
 %token <id> identifier
 
 /*token relativi a union*/
@@ -49,107 +43,85 @@ void updateSymbolVal(char symbol, int Ival,float Fval);
 
 /* descriptions of expected inputs     corresponding actions (in C) */
 
-principal	: assignment ';'            {;}
+principal	: assignment ';'            {;} 
 			| IntDefinition ';'         {;}
 			| IntDefAssignment ';'		{;}
 			| FloatDefAssignament ';'   {;}
 			| FloatDefinition ';'		{;}
-			| exit_command ';'		{exit(EXIT_SUCCESS);}
-			| print exp ';'			{printf("Printing %d\n", $2);}
+			| exit_command ';'		    {exit(EXIT_SUCCESS);} //lo mantengo solo per le prove
+			| print identifier ';'			
+			{ // ogni volta che printo devo capire che tipo printare 
+				int t ; 
+				int bucket = computeSymbolIndex($2);						
+				t=symbols.tip[bucket];                                        //vado a leggere in tip 
+				if(t==0) {printf("Printing %d",IsymbolVal($2,symbols));}
+				else  {printf("ciao");printf("Printing %lf",FsymbolVal($2,symbols));}	
+			}
 			| principal assignment ';' {;}
 			| principal IntDefAssignment ';'	{;}
 			| principal IntDefinition ';' {;}
 			| principal FloatDefAssignament ';' {;}
 			| principal FloatDefinition ';' {;}
-			| principal print exp ';'	{printf("Printing %d\n", $3);}
+			| principal print identifier ';'	
+			{
+				int t ;
+				int bucket = computeSymbolIndex($3);
+				t=symbols.tip[bucket];
+				printf("%d\n",t);
+				if(t==0) {printf("Printing %d",IsymbolVal($3,symbols));}
+				else {printf("Printing %lf",FsymbolVal($3,symbols));}
+			}
 			| principal exit_command ';'	{exit(EXIT_SUCCESS);}
 			;
 
 /*operazione di definzione e assegnazione integer */
-IntDefAssignment : integer identifier '=' exp  { updateSymbolVal($2,$4,0); }
-			;
-FloatDefAssignament : floatin identifier '=' exp { updateSymbolVal($2,0,$4); }
-
-IntDefinition : integer identifier {IAddSymbol($2);}
+IntDefAssignment : integer identifier '=' exp  { updateSymbolVal($2,$4,0,&symbols); }
 			;
 
-FloatDefinition : floatin identifier {FAddSymbol($2);}
+IntDefinition : integer identifier {IAddSymbol($2,&symbols);}
+			;
+
+/*operazione di definzione e assegnazione per float*/
+
+FloatDefinition : floatin identifier {FAddSymbol($2,&symbols);}
 				;
-/*Assegnamento generico*/
-assignment : identifier '=' exp {updateSymbolVal($1,$3,);}
 
+FloatDefAssignament : floatin identifier '=' exp { updateSymbolVal($2,0,$4,&symbols); }
+					;
 
+/*Assegnamento generico (exmp a = a+1 )*/ 
+assignment : identifier '=' exp {int t;
+								 int bucket = computeSymbolIndex($1);
+								 t=symbols.tip[bucket];
+								 if(t==0){updateSymbolVal($1,$3,0,&symbols);}
+								 else if(t==1){updateSymbolVal($1,0,$3,&symbols);}}
+          ;
+
+/*macro Sottoparte di un'assegnazione*/
 exp    	: term                  {$$ = $1;}
        	| exp '+' term          {$$ = $1 + $3;}
        	| exp '-' term          {$$ = $1 - $3;}
        	;
+
+/*Sottoparte più piccola di una espressione*/
 term   	: IntNumber             {$$ = $1;}
 		| FloatNumber           {$$ = $1;}
-		| identifier			{
-			char t;
-			int bucket = computeSymbolIndex($1)
+		| identifier			
+		{//devo capire cosa mettere al posto della variabile quindi devo prima capire di che tipo è e poi restituire il relativ valore
+			int t;
+			int bucket = computeSymbolIndex($1); 
 			t=symbols.tip[bucket];
-			if(t=='i') {$$= IsymbolVal($1);}
-			else if(t=='f') {$$=FsymbolVal($1);}
+			if(t==0) {$$= IsymbolVal($1,symbols);}
+			else if(t==1) {$$=FsymbolVal($1,symbols);}
 			} 
         ;
 
-%%                     /* C code */
-
-/*Va realizzata un'organizzazione più efficente della symbol val*/
-int computeSymbolIndex(char token)
-{
-	int idx = -1;
-	if(islower(token)) {
-		idx = token - 'a' + 26;
-	} else if(isupper(token)) {
-		idx = token - 'A';
-	}
-	return idx;
-} 
-
-/* returns the value of a given symbol */
-int IsymbolVal(char symbol)
-{
-	int bucket = computeSymbolIndex(symbol);
-	return symbols[bucket];
-}
-
-float FsymbolVal(char symbol)
-{
-	int bucket = computeSymbolIndex(symbol);
-	return symbols[bucket];
-}
-
-/* updates the value of a given symbol */
-void updateSymbolVal(char symbol, int Ival,float Fval);
-{
-	int bucket;
-	if(Ival != 0 && Fval == 0){
-		bucket = computeSymbolIndex(symbol);
-		symbols.intSym[bucket] = Ival;
-		symbols.tip[bucket] = 'i'; // servirà dopo per capure il tipo
-	}else if(Ival==0 && Fval != 0){
-		bucket = computeSymbolIndex(symbol);
-		symbols.fsym[bucket] = Fval;
-		symbols.tip[bucket] = 'f';
-	}	
-}
-
-// Updata la symboltable ma solo in caso di definizione quindi mette 0;
-void IAddSymbol(char symbol){
-	int bucket = computeSymbolIndex(symbol);
-	symbols.intSym[bucket] = 0;
-}
-
-void FAddSymbol(char symbol){
-	int bucket = computeSymbolIndex(symbol);
-	symbols.intSym[bucket] = 0;
-}
+%%                    
 
 int main (void) {
 
 	/* init symbol table */
+
 	int i;
 	for(i=0; i<52; i++) {
 		symbols.intSym[i] = 0;

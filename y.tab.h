@@ -81,11 +81,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "compiler.y"
+#line 15 "compiler.y"
 
 	int num; 
 	float Fnum;
-	char id;
+	char id; 
 
 #line 91 "y.tab.h"
 
